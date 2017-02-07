@@ -15,7 +15,7 @@ public class Application {
 		if (args.length < 1) {
 			System.out.println("Не указано ни одного пути к файлу!");
 		}
-		for (String path:args) {
+		for (String path : args) {
 			try {
 				ResourceChecker checker = new ResourceChecker(path);
 				checker.checkForRepeats(store);

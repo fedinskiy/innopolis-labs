@@ -35,21 +35,16 @@ public class ResourceChecker {
 		}
 		resourceName = resource.getAbsolutePath();
 
-		try(BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(resource), DEFAULT_ENCODING))){
+		try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(resource), DEFAULT_ENCODING))) {
 			read(in, Math.toIntExact(resource.length()));
 			in.close();
-		}catch (ArithmeticException ae){
+		} catch (ArithmeticException ae) {
 			throw new WrongResourceException("Файл " + filePath + " слишком велик!");
 		}
 
 	}
 
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-	}
-
-	private void read( BufferedReader in, int size) throws IOException, IllegalSymbolsException {
+	private void read(BufferedReader in, int size) throws IOException, IllegalSymbolsException {
 		final String SPACES = "[\\s]";
 		String line;
 		String[] lineContent;
@@ -67,7 +62,7 @@ public class ResourceChecker {
 			}
 			lineContent = line.split(SPACES);
 			for (String stringPiece : lineContent) {
-				word=cleanWord(stringPiece);
+				word = cleanWord(stringPiece);
 				if (!word.isEmpty()) {
 					wordArray.add(word);
 				}
@@ -79,41 +74,14 @@ public class ResourceChecker {
 	private String cleanWord(String stringPiece) {
 		final String NOT_WORD = "[^\\p{IsAlphabetic}-]+";
 
-		final String PUNCTUATTION="[\\p{Punct}—]+";
-		return stringPiece.replaceAll(NOT_WORD,"");
+		return stringPiece.replaceAll(NOT_WORD, "");
 	}
 
 	public void checkForRepeats(WordsStore store) throws IllegalSymbolsException, WordAlredyAddedException, IOException {
-		for(String word:this.wordArray){
+		for (String word : this.wordArray) {
 			store.addNewWord(word);
 		}
-		/*
-		line = in.readLine();
-		while (null != line) {
-			if (line.isEmpty()) {
-				line = in.readLine();
-				continue;
-			}
-			if (!checkString(line)) {
-				throw new IllegalSymbolsException(line, resourceName);
-			}
-			lineContent = line.split(SPACES);
-			for (String word : lineContent) {
-				if (!isNotWord(word)) {
-					v
-				}
-			}
-			line = in.readLine();
-		}*/
 	}
-
-
-/*
-	private boolean isNotWord(String word) {
-		return word.matches(NOT_WORD);
-	}
-
- */
 
 	private boolean checkString(String wordForCheck) {
 		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d,.\\-—?!№%\":*();]*";
