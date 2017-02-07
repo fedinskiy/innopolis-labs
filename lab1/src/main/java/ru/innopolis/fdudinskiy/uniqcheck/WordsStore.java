@@ -1,17 +1,21 @@
 package ru.innopolis.fdudinskiy.uniqcheck;
 
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlredyAddedException;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by fedinskiy on 06.02.17.
  */
 public class WordsStore {
-	private List<String> words=new ArrayList<String>();
+	private Set<String> words=new HashSet<String>();
 
-	public void addNewWord(String word) throws IllegalArgumentException{
+	public void addNewWord(String word) throws WordAlredyAddedException {
 		if (words.contains(word)) {
-			throw new IllegalArgumentException("Такое слово уже существует!");
+			throw new WordAlredyAddedException(word);
 		}else{
 			addWord(word);
 		}
