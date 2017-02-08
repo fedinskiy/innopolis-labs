@@ -14,6 +14,13 @@ public class ResourceChecker {
 	private String resourceName;
 	private ArrayList<String> wordArray;
 	
+	/**
+	 * @implSpec читает данные из файла по пути, если тот существует
+	 * @param filePath путь к файлу, который читаем
+	 * @throws WrongResourceException
+	 * @throws IOException
+	 * @throws IllegalSymbolsException
+	 */
 	public ResourceChecker(String filePath) throws WrongResourceException, IOException, IllegalSymbolsException {
 		final String DEFAULT_ENCODING = "UTF-8";
 		File resource;
@@ -78,7 +85,12 @@ public class ResourceChecker {
 		return stringPiece.replaceAll(NOT_WORD, "");
 	}
 	
-	public void checkForRepeats(WordsStore store) throws IllegalSymbolsException, WordAlreаdyAddedException, IOException {
+	/**
+	 * @implSpec Проверяет все слова, прочитанные из ресурса, на наличие в данном хранилище.
+	 * @param store
+	 * @throws WordAlreаdyAddedException
+	 */
+	public void checkForRepeats(WordsStore store) throws WordAlreаdyAddedException {
 		for (String word : this.wordArray) {
 			store.addNewWord(word);
 		}
