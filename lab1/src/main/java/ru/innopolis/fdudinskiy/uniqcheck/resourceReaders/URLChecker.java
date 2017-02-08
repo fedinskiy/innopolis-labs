@@ -1,6 +1,8 @@
 package ru.innopolis.fdudinskiy.uniqcheck.resourceReaders;
 
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.ResourceTooLargeException;
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,9 +14,17 @@ import java.net.URL;
  */
 public class URLChecker extends ResourceChecker {
 	
-	public URLChecker(URL url) throws IOException, IllegalSymbolsException {
-		super(url.toString(),
-				Math.toIntExact(url.openConnection().getContentLength()));
+	public URLChecker(URL url) throws IOException, IllegalSymbolsException,
+										WrongResourceException {
+		super(url.toString());
+		try {
+			super.prepareStore(
+					Math.toIntExact(url.openConnection().getContentLength()));
+		} catch (ResourceTooLargeException ex) {
+			throw new WrongResourceException("Файл, расположенный по пути"
+					+ url.toString()
+					+ " слишком велик!", ex);
+		}
 		try (BufferedReader in = new BufferedReader(
 				new InputStreamReader(url.openStream()))) {
 			this.read(in);

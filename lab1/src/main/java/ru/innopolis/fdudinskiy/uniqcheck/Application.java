@@ -12,23 +12,35 @@ import java.io.IOException;
  */
 public class Application {
 	public static void main(String[] args) {
-		WordsStore store = new WordsStore();
+		WordsStore store;
+		ResourceChecker[] checkers= new ResourceChecker[args.length];
+		int storeSize=0;
+		
 		if (args.length < 1) {
 			System.out.println("Не указано ни одного пути к файлу!");
 			return;
 		}
-		for (String path : args) {
+		for(int i=0; i<args.length;++i){
+			String path = args[i];
+			System.out.println("Проверка ресурса "+path);
+			ResourceChecker checker = null;
 			try {
-				System.out.println("Проверка ресурса "+path);
-				ResourceChecker checker = ResourceChecker.createChecker(path);
-				checker.checkForRepeats(store);
+				checker = ResourceChecker.createChecker(path);
+				checkers[i]=checker;
+				storeSize+=checker.getSize();//TODO сделать это потокобезпасным!
+			} catch (WrongResourceException | IllegalSymbolsException e) {
+				System.out.println(e.getMessage());
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		}
+		store = new WordsStore(storeSize);
+		for (ResourceChecker checker : checkers) {
+			try {
+				if(null!=checker) {
+					checker.checkForRepeats(store);
+				}
 			} catch (WordAlreаdyAddedException e) {
-				System.out.println(e.getMessage());
-			} catch (IllegalSymbolsException e) {
-				System.out.println(e.getMessage());
-			} catch (WrongResourceException e) {
 				System.out.println(e.getMessage());
 			}
 		}

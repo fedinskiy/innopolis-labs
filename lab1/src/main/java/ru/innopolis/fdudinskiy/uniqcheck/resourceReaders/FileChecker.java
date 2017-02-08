@@ -1,6 +1,7 @@
 package ru.innopolis.fdudinskiy.uniqcheck.resourceReaders;
 
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.ResourceTooLargeException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
 
 import java.io.*;
@@ -17,27 +18,29 @@ public class FileChecker extends ResourceChecker {
 	 */
 	public FileChecker(File resource)
 			throws WrongResourceException,
-					IOException,
-					IllegalSymbolsException {
-		super(resource.getAbsolutePath(), Math.toIntExact(resource.length()));
+			IOException,
+			IllegalSymbolsException {
+		super(resource.getAbsolutePath());
 		final String DEFAULT_ENCODING = "UTF-8";
 		
 		String filePath = resource.getAbsolutePath();
 		if (!resource.exists()) {
 			throw new WrongResourceException("Файл " + filePath
-														+ " не существует");
+					+ " не существует");
 		}
 		if (!resource.isFile()) {
 			throw new WrongResourceException("По пути " + filePath
-													+ " расположена папка!");
+					+ " расположена папка!");
 		}
 		if (!resource.canRead()) {
 			throw new WrongResourceException("Невозможно прочесть файл "
-												+ filePath + " !");
+					+ filePath + " !");
 		}
-		if (resource.length() > Integer.MAX_VALUE) {
+		try {
+			super.prepareStore(Math.toIntExact(resource.length()));
+		} catch (ResourceTooLargeException ex) {
 			throw new WrongResourceException("Файл " + filePath
-														+ " слишком велик!");
+					+ " слишком велик!", ex);
 		}
 		try (BufferedReader in = new BufferedReader(
 				new InputStreamReader(

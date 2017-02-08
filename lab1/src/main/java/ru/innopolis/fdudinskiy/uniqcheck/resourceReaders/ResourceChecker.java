@@ -2,6 +2,7 @@ package ru.innopolis.fdudinskiy.uniqcheck.resourceReaders;
 
 import ru.innopolis.fdudinskiy.uniqcheck.WordsStore;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.ResourceTooLargeException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
 
@@ -42,6 +43,20 @@ public class ResourceChecker {
 		}
 	}
 	
+	protected ResourceChecker(String resourceName) {
+		this.resourceName = resourceName;
+		this.wordArray = new ArrayList<>();
+	}
+	
+	protected void prepareStore(long dataSize) throws ResourceTooLargeException {
+		final int MAX_WORD_TO_SIZE_RATIO=2;
+		if ((dataSize/MAX_WORD_TO_SIZE_RATIO)>Integer.MAX_VALUE){
+			throw new ResourceTooLargeException("Ресурс  слишком велик!");
+		}
+		this.wordArray = new ArrayList<String>(
+				(int) (dataSize/MAX_WORD_TO_SIZE_RATIO));
+	}
+	
 	private static ResourceType getSourceType(String sourcePath) {
 		final String URL_FLAG = "http";
 		
@@ -50,10 +65,6 @@ public class ResourceChecker {
 				: ResourceType.FILE;
 	}
 	
-	protected ResourceChecker(String resourceName, int awaitedSize) {
-		this.resourceName = resourceName;
-		this.wordArray = new ArrayList<>(awaitedSize);
-	}
 	
 	protected void read(BufferedReader in)
 			throws IOException, IllegalSymbolsException {
@@ -110,6 +121,10 @@ public class ResourceChecker {
 		
 		System.out.println("Обработка строки " + wordForCheck);
 		return wordForCheck.matches(ALLOWED_SYMBOLS);
+	}
+	
+	public int getSize() {
+		return wordArray.size();
 	}
 	
 	private enum ResourceType {

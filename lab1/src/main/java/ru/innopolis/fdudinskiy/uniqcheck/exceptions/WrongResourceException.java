@@ -9,6 +9,10 @@ public class WrongResourceException extends Exception {
 	 * @param cause
 	 */
 	public WrongResourceException(String cause) {
-		super(cause);
+		this(cause,null);
+	}
+	
+	public WrongResourceException(String cause, ResourceTooLargeException ex) {
+		super(cause,ex);
 	}
 }
