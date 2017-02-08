@@ -1,6 +1,6 @@
 package ru.innopolis.fdudinskiy.uniqcheck;
 
-import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlredyAddedException;
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,9 +11,9 @@ import java.util.Set;
 public class WordsStore {
 	private Set<String> words = new HashSet<String>();
 
-	public void addNewWord(String word) throws WordAlredyAddedException {
+	public void addNewWord(String word) throws WordAlreаdyAddedException {
 		if (words.contains(word)) {
-			throw new WordAlredyAddedException(word);
+			throw new WordAlreаdyAddedException(word);
 		} else {
 			addWord(word);
 		}

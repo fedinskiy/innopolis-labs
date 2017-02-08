@@ -1,7 +1,7 @@
 package ru.innopolis.fdudinskiy.uniqcheck;
 
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
-import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlredyAddedException;
+import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
 
 import java.io.IOException;
@@ -14,6 +14,7 @@ public class Application {
 		WordsStore store = new WordsStore();
 		if (args.length < 1) {
 			System.out.println("Не указано ни одного пути к файлу!");
+			return;
 		}
 		for (String path : args) {
 			try {
@@ -21,7 +22,7 @@ public class Application {
 				checker.checkForRepeats(store);
 			} catch (IOException e) {
 				e.printStackTrace();
-			} catch (WordAlredyAddedException e) {
+			} catch (WordAlreаdyAddedException e) {
 				System.out.println(e.getMessage());
 			} catch (IllegalSymbolsException e) {
 				System.out.println(e.getMessage());
