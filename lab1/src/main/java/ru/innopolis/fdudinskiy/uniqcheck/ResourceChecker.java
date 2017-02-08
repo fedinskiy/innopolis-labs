@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ResourceChecker {
 	private String resourceName;
-	private List<String> wordArray;
+	private ArrayList<String> wordArray;
 
 	public ResourceChecker(String filePath) throws WrongResourceException, IOException, IllegalSymbolsException {
 		final String DEFAULT_ENCODING = "UTF-8";
@@ -35,6 +35,9 @@ public class ResourceChecker {
 		}
 		resourceName = resource.getAbsolutePath();
 
+		if(resource.length()>Integer.MAX_VALUE){
+			throw new WrongResourceException("Файл " + filePath + " слишком велик!");
+		}
 		try (BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(resource), DEFAULT_ENCODING))) {
 			read(in, Math.toIntExact(resource.length()));
 			in.close();
@@ -69,6 +72,7 @@ public class ResourceChecker {
 			}
 			line = in.readLine();
 		}
+		wordArray.trimToSize();
 	}
 
 	private String cleanWord(String stringPiece) {
