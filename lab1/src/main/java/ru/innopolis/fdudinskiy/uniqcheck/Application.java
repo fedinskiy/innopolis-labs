@@ -3,6 +3,7 @@ package ru.innopolis.fdudinskiy.uniqcheck;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
+import ru.innopolis.fdudinskiy.uniqcheck.resourceReaders.ResourceChecker;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class Application {
 		}
 		for (String path : args) {
 			try {
-				ResourceChecker checker = new ResourceChecker(path);
+				ResourceChecker checker = ResourceChecker.createChecker(path);
 				checker.checkForRepeats(store);
 			} catch (IOException e) {
 				e.printStackTrace();
