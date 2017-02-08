@@ -11,7 +11,7 @@ import java.io.IOException;
  * Created by fedinskiy on 06.02.17.
  */
 public class Application {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws WordAlreаdyAddedException {
 		WordsStore store;
 		ResourceChecker[] checkers= new ResourceChecker[args.length];
 		int storeSize=0;
@@ -34,15 +34,12 @@ public class Application {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("Size is "+storeSize);
 		store = new WordsStore(storeSize);
 		for (ResourceChecker checker : checkers) {
-			try {
 				if(null!=checker) {
 					checker.checkForRepeats(store);
 				}
-			} catch (WordAlreаdyAddedException e) {
-				System.out.println(e.getMessage());
-			}
 		}
 	}
 }
