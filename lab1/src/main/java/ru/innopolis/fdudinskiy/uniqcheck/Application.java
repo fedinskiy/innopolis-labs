@@ -19,6 +19,7 @@ public class Application {
 		}
 		for (String path : args) {
 			try {
+				System.out.println("Проверка ресурса "+path);
 				ResourceChecker checker = ResourceChecker.createChecker(path);
 				checker.checkForRepeats(store);
 			} catch (IOException e) {

@@ -12,11 +12,13 @@ public class WordsStore {
 	private Set<String> words = new HashSet<String>();
 	
 	/**
-	 * @implSpec Добавляет в хранилище новое слово. Если слово в хранилище уже есть — выдает ошибку.
+	 * @implSpec Добавляет в хранилище новое слово.
+	 * Если слово в хранилище уже есть — выдает ошибку.
 	 * @param word
 	 * @throws WordAlreаdyAddedException
 	 */
-	public void addNewWord(String word) throws WordAlreаdyAddedException {
+	public synchronized void addNewWord(String word)
+									throws WordAlreаdyAddedException {
 		if (words.contains(word)) {
 			throw new WordAlreаdyAddedException(word);
 		} else {

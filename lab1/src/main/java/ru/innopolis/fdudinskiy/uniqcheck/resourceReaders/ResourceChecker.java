@@ -5,7 +5,9 @@ import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -17,19 +19,20 @@ public class ResourceChecker {
 	private ArrayList<String> wordArray;
 	
 	/**
-	 * @implSpec читает данные из ресурса по пути, если тот существует
 	 * @param sourcePath путь к ресурсу, который надо прочесть
 	 * @throws WrongResourceException
 	 * @throws IOException
 	 * @throws IllegalSymbolsException
+	 * @implSpec читает данные из ресурса по пути, если тот существует
 	 */
-	public static ResourceChecker createChecker(String sourcePath) throws WrongResourceException, IOException, IllegalSymbolsException {
+	public static ResourceChecker createChecker(String sourcePath)
+			throws WrongResourceException, IOException, IllegalSymbolsException {
 		ResourceType sourceType = null;
 		if (null == sourcePath) {
 			throw new WrongResourceException("Не передан путь!");
 		}
 		sourceType = getSourceType(sourcePath);
-		switch (sourceType){
+		switch (sourceType) {
 			case FILE:
 				return new FileChecker(new File(sourcePath));
 			case URL:
@@ -40,23 +43,27 @@ public class ResourceChecker {
 	}
 	
 	private static ResourceType getSourceType(String sourcePath) {
-		final String URL_FLAG="http";
+		final String URL_FLAG = "http";
 		
-		return sourcePath.startsWith(URL_FLAG)?ResourceType.URL:ResourceType.FILE;
+		return (sourcePath.startsWith(URL_FLAG))
+				? ResourceType.URL
+				: ResourceType.FILE;
 	}
 	
-	protected ResourceChecker(String resourceName, int awaitedSize){
-		this.resourceName=resourceName;
+	protected ResourceChecker(String resourceName, int awaitedSize) {
+		this.resourceName = resourceName;
 		this.wordArray = new ArrayList<>(awaitedSize);
 	}
-	protected void read(BufferedReader in) throws IOException, IllegalSymbolsException {
+	
+	protected void read(BufferedReader in)
+			throws IOException, IllegalSymbolsException {
 		final String SPACES = "[\\s]";
 		String line;
 		String[] lineContent;
 		String word;
 		
-		if(null==wordArray){
-			wordArray=new ArrayList<>();
+		if (null == wordArray) {
+			wordArray = new ArrayList<>();
 		}
 		line = in.readLine();
 		while (null != line) {
@@ -86,11 +93,13 @@ public class ResourceChecker {
 	}
 	
 	/**
-	 * @implSpec Проверяет все слова, прочитанные из ресурса, на наличие в данном хранилище.
 	 * @param store
 	 * @throws WordAlreаdyAddedException
+	 * @implSpec Проверяет все слова, прочитанные из ресурса,
+	 * на наличие в данном хранилище.
 	 */
-	public void checkForRepeats(WordsStore store) throws WordAlreаdyAddedException {
+	public void checkForRepeats(WordsStore store)
+			throws WordAlreаdyAddedException {
 		for (String word : this.wordArray) {
 			store.addNewWord(word);
 		}
@@ -102,7 +111,8 @@ public class ResourceChecker {
 		System.out.println("Обработка строки " + wordForCheck);
 		return wordForCheck.matches(ALLOWED_SYMBOLS);
 	}
-	private enum ResourceType{
-		URL,FILE
+	
+	private enum ResourceType {
+		URL, FILE
 	}
 }

@@ -12,8 +12,10 @@ public class IllegalSymbolsException extends Exception {
 	 * @param line
 	 * @param filename
 	 */
-	public IllegalSymbolsException(@NotNull String line, @NotNull String filename) {
-		super("Строка '" + line + "' в файле " + filename + " содержит запрещенные символы!");
+	public IllegalSymbolsException(@NotNull String line,
+	                               @NotNull String filename) {
+		super("Строка '" + line + "' в файле " + filename
+				+ " содержит запрещенные символы!");
 		this.line = line;
 	}
 }
