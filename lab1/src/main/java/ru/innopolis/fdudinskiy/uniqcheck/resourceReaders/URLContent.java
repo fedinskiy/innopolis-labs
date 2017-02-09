@@ -12,10 +12,16 @@ import java.net.URL;
 /**
  * Created by fedinskiy on 08.02.17.
  */
-public class URLChecker extends ResourceChecker {
-	
-	public URLChecker(URL url) throws IOException, IllegalSymbolsException,
-										WrongResourceException {
+public class URLContent extends ResourceContent {
+	/**
+	 *
+	 * @param url — УРЛ, по которому расположен ресурс
+	 * @throws IOException
+	 * @throws IllegalSymbolsException
+	 * @throws WrongResourceException
+	 */
+	public URLContent(URL url) throws IOException, IllegalSymbolsException,
+			WrongResourceException {
 		super(url.toString());
 		try {
 			super.prepareStore(

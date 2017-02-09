@@ -1,70 +1,34 @@
 package ru.innopolis.fdudinskiy.uniqcheck.resourceReaders;
 
-import ru.innopolis.fdudinskiy.uniqcheck.WordsStore;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.ResourceTooLargeException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
-import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
+import ru.innopolis.fdudinskiy.uniqcheck.store.WordsStore;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 /**
  * Created by fedinskiy on 06.02.17.
  */
-public class ResourceChecker {
+public abstract class ResourceContent {
 	private String resourceName;
 	private ArrayList<String> wordArray;
 	
-	/**
-	 * @param sourcePath путь к ресурсу, который надо прочесть
-	 * @throws WrongResourceException
-	 * @throws IOException
-	 * @throws IllegalSymbolsException
-	 * @implSpec читает данные из ресурса по пути, если тот существует
-	 */
-	public static ResourceChecker createChecker(String sourcePath)
-			throws WrongResourceException, IOException, IllegalSymbolsException {
-		ResourceType sourceType = null;
-		if (null == sourcePath) {
-			throw new WrongResourceException("Не передан путь!");
-		}
-		sourceType = getSourceType(sourcePath);
-		switch (sourceType) {
-			case FILE:
-				return new FileChecker(new File(sourcePath));
-			case URL:
-				return new URLChecker(new URL(sourcePath));
-			default:
-				return null;
-		}
-	}
-	
-	protected ResourceChecker(String resourceName) {
+	protected ResourceContent(String resourceName) {
 		this.resourceName = resourceName;
 		this.wordArray = new ArrayList<>();
 	}
 	
 	protected void prepareStore(long dataSize) throws ResourceTooLargeException {
-		final int MAX_WORD_TO_SIZE_RATIO=2;
-		if ((dataSize/MAX_WORD_TO_SIZE_RATIO)>Integer.MAX_VALUE){
+		final int MAX_WORD_TO_SIZE_RATIO = 2;
+		if ((dataSize / MAX_WORD_TO_SIZE_RATIO) > Integer.MAX_VALUE) {
 			throw new ResourceTooLargeException("Ресурс  слишком велик!");
 		}
 		this.wordArray = new ArrayList<String>(
-				(int) (dataSize/MAX_WORD_TO_SIZE_RATIO));
+				(int) (dataSize / MAX_WORD_TO_SIZE_RATIO));
 	}
-	
-	private static ResourceType getSourceType(String sourcePath) {
-		final String URL_FLAG = "http";
-		
-		return (sourcePath.startsWith(URL_FLAG))
-				? ResourceType.URL
-				: ResourceType.FILE;
-	}
-	
 	
 	protected void read(BufferedReader in)
 			throws IOException, IllegalSymbolsException {
@@ -76,6 +40,7 @@ public class ResourceChecker {
 		if (null == wordArray) {
 			wordArray = new ArrayList<>();
 		}
+		
 		line = in.readLine();
 		while (null != line) {
 			if (line.isEmpty()) {
@@ -109,15 +74,20 @@ public class ResourceChecker {
 	 * @implSpec Проверяет все слова, прочитанные из ресурса,
 	 * на наличие в данном хранилище.
 	 */
-	public void checkForRepeats(WordsStore store)
-			throws WordAlreаdyAddedException {
+	public boolean addNewWordsToStore(WordsStore store) throws WordAlreаdyAddedException {
 		for (String word : this.wordArray) {
-			store.addNewWord(word);
+			System.out.println("пишем слово " + word + " из источника " + this
+					.resourceName);
+			
+			if (!store.addNewWord(word))
+				break;
 		}
+		return !store.isHasDoubles();
 	}
 	
 	private boolean isStringContainsAcceptableSymbolsOnly(String wordForCheck) {
-		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d,.\\-—?!№%\":*();]*";
+		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d,.\\-—?!№%\":*();" +
+				"\\[\\]]*";
 		
 		System.out.println("Обработка строки " + wordForCheck);
 		return wordForCheck.matches(ALLOWED_SYMBOLS);
@@ -125,9 +95,5 @@ public class ResourceChecker {
 	
 	public int getSize() {
 		return wordArray.size();
-	}
-	
-	private enum ResourceType {
-		URL, FILE
 	}
 }

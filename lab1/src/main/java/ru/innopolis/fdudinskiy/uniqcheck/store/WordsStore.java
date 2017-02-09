@@ -1,4 +1,4 @@
-package ru.innopolis.fdudinskiy.uniqcheck;
+package ru.innopolis.fdudinskiy.uniqcheck.store;
 
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WordAlreаdyAddedException;
 
@@ -10,17 +10,17 @@ import java.util.Set;
  */
 public class WordsStore {
 	private Set<String> words;
-	
-	public WordsStore() {
-		words = new HashSet<String>();
-	}
+	private volatile boolean hasDoubles;
 	
 	/**
-	 *
 	 * @param size — размер массива
 	 */
 	public WordsStore(int size) {
 		words = new HashSet<String>(size);
+	}
+	
+	public synchronized boolean isHasDoubles() {
+		return hasDoubles;
 	}
 	
 	/**
@@ -29,12 +29,17 @@ public class WordsStore {
 	 * @implSpec Добавляет в хранилище новое слово.
 	 * Если слово в хранилище уже есть — выдает ошибку.
 	 */
-	public synchronized void addNewWord(String word)
+	public synchronized boolean addNewWord(String word)
 			throws WordAlreаdyAddedException {
+		if (hasDoubles) {
+			return false;
+		}
 		if (words.contains(word)) {
+			hasDoubles = true;
 			throw new WordAlreаdyAddedException(word);
 		} else {
 			addWord(word);
+			return true;
 		}
 	}
 	

@@ -5,17 +5,15 @@ import com.sun.istack.internal.NotNull;
 /**
  * Created by fedinskiy on 07.02.17.
  */
-public class IllegalSymbolsException extends Exception {
-	private String line;
+public class IllegalSymbolsException extends BasicCallableException {
 	
 	/**
-	 * @param line
-	 * @param filename
+	 * @param line         — строка, содержащая неподдерживаемые символы
+	 * @param resourceName — ресурс, содержащий неподдерживаемые символы
 	 */
 	public IllegalSymbolsException(@NotNull String line,
-	                               @NotNull String filename) {
-		super("Строка '" + line + "' в файле " + filename
+	                               @NotNull String resourceName) {
+		super("Строка '" + line + "' в файле " + resourceName
 				+ " содержит запрещенные символы!");
-		this.line = line;
 	}
 }

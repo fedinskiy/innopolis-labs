@@ -5,14 +5,12 @@ import com.sun.istack.internal.NotNull;
 /**
  * Created by fedinskiy on 07.02.17.
  */
-public class WordAlreаdyAddedException extends Exception {
-	private String word;
+public class WordAlreаdyAddedException extends BasicCallableException {
 	
 	/**
-	 * @param word
+	 * @param word — слово, которое уже было добавлено
 	 */
 	public WordAlreаdyAddedException(@NotNull String word) {
-		super("Слово '" + word + "' уже существует");
-		this.word = word;
+		super("Слово '" + word + "' уже было добвлено");
 	}
 }

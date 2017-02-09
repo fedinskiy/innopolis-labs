@@ -2,77 +2,122 @@ package ru.innopolis.fdudinskiy.uniqcheck;
 
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
-import ru.innopolis.fdudinskiy.uniqcheck.resourceReaders.ResourceChecker;
-import ru.innopolis.fdudinskiy.uniqcheck.threads.ResourceCheckerCheckTread;
-import ru.innopolis.fdudinskiy.uniqcheck.threads.ResourceCheckerCreatingThread;
+import ru.innopolis.fdudinskiy.uniqcheck.resourceReaders.ResourceContent;
+import ru.innopolis.fdudinskiy.uniqcheck.store.WordsStore;
+import ru.innopolis.fdudinskiy.uniqcheck.threads.CheckResourceOperation;
+import ru.innopolis.fdudinskiy.uniqcheck.threads.CreateResourceOperation;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by fedinskiy on 08.02.17.
  */
 public class MultiThreadApplication {
-	
-	private ResourceChecker[] checkers;
+	private final ExecutorService service;
 	private final int resourceQuantity;
-	private WordsStore store;
+	private ResourceContent[] checkers;
 	
+	/**
+	 * @param resourceQuantity — число ресурсов
+	 */
 	public MultiThreadApplication(int resourceQuantity) {
-		this.resourceQuantity=resourceQuantity;
+		this.resourceQuantity = resourceQuantity;
+		service = Executors.newFixedThreadPool(resourceQuantity);
 	}
 	
-	public static void main(String[] args) throws WrongResourceException, IllegalSymbolsException, IOException {
-		MultiThreadApplication app = new MultiThreadApplication(args.length);
-		app.initStore(args);
-		app.checkStore();
-	}
-	
-	private void checkStore() {
-			ResourceCheckerCheckTread[] checkerThreads = new
-					ResourceCheckerCheckTread[resourceQuantity];
-		for(int i = 0; i< resourceQuantity; ++i) {
-			checkerThreads[i] = new ResourceCheckerCheckTread(checkers[i],store);
-			checkerThreads[i].start();
-		}
+	public static void main(String[] args) throws WrongResourceException,
+			IllegalSymbolsException, IOException {
 		
-		for (int i = 0; i< resourceQuantity; ++i){
-			try {
-				checkerThreads[i].join();
-				checkers[i]=checkerThreads[i].getChecker();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	private void initStore(String[] args) {
-		checkers = new ResourceChecker[resourceQuantity];
-		ResourceCheckerCreatingThread[] creatingThreads = new
-				ResourceCheckerCreatingThread[resourceQuantity];
-		int storeSize=0;
+		MultiThreadApplication app;
+		WordsStore store;
 		
-		if (resourceQuantity < 1) {
-			System.out.println("Не указано ни одного пути к файлу!");
+		app = new MultiThreadApplication(args.length);
+		store = app.initStore(args);
+		
+		if (null == store) {
 			return;
 		}
 		
-		for(int i = 0; i< resourceQuantity; ++i) {
-			String path = args[i];
-			System.out.println("Проверка ресурса " + path);
-			creatingThreads[i] = new ResourceCheckerCreatingThread(path);
-			creatingThreads[i].start();
+		if (app.checkStore(store)) {
+			System.out.println("Добавление слов прошло успешно, ресурсы " +
+					"содержат только уникальные слова");
 		}
 		
-		for (int i = 0; i< resourceQuantity; ++i){
+		app.stopService();
+	}
+	
+	private void stopService() {
+		service.shutdown();
+		service.shutdownNow();
+	}
+	
+	private WordsStore initStore(String[] args) {
+		int totalNumberOfWords = 0;
+		ArrayList<CreateResourceOperation> creatingTasks;
+		ArrayList<Future<ResourceContent>> creatingResults;
+		
+		if (resourceQuantity < 1) {
+			System.out.println("Не указано ни одного пути к файлу!");
+			return null;
+		}
+		
+		creatingTasks = new ArrayList<>(resourceQuantity);
+		creatingResults = new ArrayList<>(resourceQuantity);
+		checkers = new ResourceContent[resourceQuantity];
+		
+		for (int i = 0; i < resourceQuantity; ++i) {
+			String path = args[i];
+			System.out.println("Проверка ресурса " + path);
+			creatingTasks.add(i, new CreateResourceOperation(path));
+			creatingResults.add(i, service.submit(creatingTasks.get(i)));
+		}
+		
+		for (int i = 0; i < resourceQuantity; ++i) {
 			try {
-				creatingThreads[i].join();
-				checkers[i]=creatingThreads[i].getChecker();
-				storeSize+= checkers[i].getSize();
+				checkers[i] = creatingResults.get(i).get();
+				totalNumberOfWords += checkers[i].getSize();
 			} catch (Exception e) {
+				stopService();
+				System.out.println(e.getLocalizedMessage());
+				return null;
+			}
+		}
+		
+		System.out.println("Total number of words is " + totalNumberOfWords);
+		
+		return new WordsStore(totalNumberOfWords);
+	}
+	
+	private boolean checkStore(WordsStore store) {
+		boolean operationSuccess = false;
+		final ArrayList<Future<Boolean>> checkingResults;
+		final CheckResourceOperation[] checkerTasks;
+		
+		checkingResults = new ArrayList<>(resourceQuantity);
+		checkerTasks = new CheckResourceOperation[resourceQuantity];
+		
+		for (int i = 0; i < resourceQuantity; ++i) {
+			checkerTasks[i] = new CheckResourceOperation(checkers[i], store);
+			checkingResults.add(i, service.submit(checkerTasks[i]));
+		}
+		
+		for (int i = 0; i < resourceQuantity; ++i) {
+			try {
+				operationSuccess = checkingResults.get(i).get();
+			} catch (ExecutionException e) {
+				stopService();
+				System.out.println(e.getMessage());
+				return false;
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("Size is "+storeSize);
-		store=new WordsStore(storeSize);
+		
+		return operationSuccess;
 	}
 }

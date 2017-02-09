@@ -3,7 +3,7 @@ package ru.innopolis.fdudinskiy.uniqcheck.exceptions;
 /**
  * Created by fedinskiy on 08.02.17.
  */
-public class ResourceTooLargeException extends WrongResourceException{
+public class ResourceTooLargeException extends WrongResourceException {
 	
 	/**
 	 * @param cause
