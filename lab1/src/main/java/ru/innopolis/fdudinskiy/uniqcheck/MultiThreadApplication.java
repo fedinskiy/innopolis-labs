@@ -30,6 +30,12 @@ public class MultiThreadApplication {
 		service = Executors.newFixedThreadPool(resourceQuantity);
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		stopService();
+	}
+	
 	public static void main(String[] args) throws WrongResourceException,
 			IllegalSymbolsException, IOException {
 		
@@ -40,6 +46,7 @@ public class MultiThreadApplication {
 		store = app.initStore(args);
 		
 		if (null == store) {
+			app.stopService();
 			return;
 		}
 		
@@ -52,8 +59,10 @@ public class MultiThreadApplication {
 	}
 	
 	private void stopService() {
-		service.shutdown();
-		service.shutdownNow();
+		if(null!=service) {
+			service.shutdown();
+			service.shutdownNow();
+		}
 	}
 	
 	private WordsStore initStore(String[] args) {

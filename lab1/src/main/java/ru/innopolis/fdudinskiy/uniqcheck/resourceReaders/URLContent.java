@@ -24,8 +24,7 @@ public class URLContent extends ResourceContent {
 			WrongResourceException {
 		super(url.toString());
 		try {
-			super.prepareStore(
-					Math.toIntExact(url.openConnection().getContentLength()));
+			super.prepareStore(url.openConnection().getContentLength());
 		} catch (ResourceTooLargeException ex) {
 			throw new WrongResourceException("Файл, расположенный по пути"
 					+ url.toString()

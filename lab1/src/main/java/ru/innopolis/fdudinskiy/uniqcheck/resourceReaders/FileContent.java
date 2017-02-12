@@ -40,7 +40,7 @@ public class FileContent extends ResourceContent {
 		}
 		
 		try {
-			super.prepareStore(Math.toIntExact(resource.length()));
+			super.prepareStore(resource.length());
 		} catch (ResourceTooLargeException ex) {
 			throw new WrongResourceException("Файл " + filePath
 					+ " слишком велик!", ex);

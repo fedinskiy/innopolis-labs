@@ -47,6 +47,7 @@ public abstract class ResourceContent {
 				line = in.readLine();
 				continue;
 			}
+			Integer i = new Integer("1");
 			if (!isStringContainsAcceptableSymbolsOnly(line)) {
 				throw new IllegalSymbolsException(line, resourceName);
 			}
