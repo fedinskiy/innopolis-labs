@@ -11,6 +11,6 @@ public class WordAlreаdyAddedException extends BasicCallableException {
 	 * @param word — слово, которое уже было добавлено
 	 */
 	public WordAlreаdyAddedException(@NotNull String word) {
-		super("Слово '" + word + "' уже было добвлено");
+		super("Слово '" + word + "' уже было добавлено");
 	}
 }
