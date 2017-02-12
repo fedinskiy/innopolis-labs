@@ -103,7 +103,7 @@ public class MultiThreadApplication {
 	}
 	
 	private boolean checkStore(WordsStore store) {
-		boolean operationSuccess = false;
+		boolean operationSuccess = true;
 		final ArrayList<Future<Boolean>> checkingResults;
 		final CheckResourceOperation[] checkerTasks;
 		
@@ -117,7 +117,7 @@ public class MultiThreadApplication {
 		
 		for (int i = 0; i < resourceQuantity; ++i) {
 			try {
-				operationSuccess = checkingResults.get(i).get();
+				operationSuccess = checkingResults.get(i).get()&&operationSuccess;
 			} catch (ExecutionException e) {
 				stopService();
 				System.out.println(e.getMessage());
