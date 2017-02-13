@@ -19,7 +19,7 @@ public class WordsStore {
 		words = new HashSet<String>(size);
 	}
 	
-	public synchronized boolean isHasDoubles() {
+	public boolean isHasDoubles() {
 		return hasDoubles;
 	}
 	

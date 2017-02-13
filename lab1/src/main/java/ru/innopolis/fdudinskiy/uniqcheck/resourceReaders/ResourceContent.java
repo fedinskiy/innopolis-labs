@@ -87,7 +87,7 @@ public abstract class ResourceContent {
 	}
 	
 	private boolean isStringContainsAcceptableSymbolsOnly(String wordForCheck) {
-		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d,.\\-—?!№%\":*();" +
+		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d,.\\--—?!№%\":*();" +
 				"\\[\\]]*";
 		
 		System.out.println("Обработка строки " + wordForCheck);

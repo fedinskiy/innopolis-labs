@@ -20,7 +20,7 @@ import java.util.concurrent.Future;
 public class MultiThreadApplication {
 	private final ExecutorService service;
 	private final int resourceQuantity;
-	private ResourceContent[] checkers;
+	//private ResourceContent[] checkers;
 	
 	/**
 	 * @param resourceQuantity — число ресурсов
@@ -40,17 +40,16 @@ public class MultiThreadApplication {
 			IllegalSymbolsException, IOException {
 		
 		MultiThreadApplication app;
-		WordsStore store;
+		ResourceContent[] resources;
 		
 		app = new MultiThreadApplication(args.length);
-		store = app.initStore(args);
-		
-		if (null == store) {
+		resources = app.getResourceContent(args);
+		if ( null==resources||resources.length==0) {
 			app.stopService();
 			return;
 		}
 		
-		if (app.checkStore(store)) {
+		if (app.putToStore(resources)) {
 			System.out.println("Добавление слов прошло успешно, ресурсы " +
 					"содержат только уникальные слова");
 		}
@@ -65,10 +64,10 @@ public class MultiThreadApplication {
 		}
 	}
 	
-	private WordsStore initStore(String[] args) {
-		int totalNumberOfWords = 0;
+	private ResourceContent[] getResourceContent(String[] args) {
 		ArrayList<CreateResourceOperation> creatingTasks;
 		ArrayList<Future<ResourceContent>> creatingResults;
+		ResourceContent[] checkers;
 		
 		if (resourceQuantity < 1) {
 			System.out.println("Не указано ни одного пути к файлу!");
@@ -82,14 +81,15 @@ public class MultiThreadApplication {
 		for (int i = 0; i < resourceQuantity; ++i) {
 			String path = args[i];
 			System.out.println("Проверка ресурса " + path);
-			creatingTasks.add(i, new CreateResourceOperation(path));
-			creatingResults.add(i, service.submit(creatingTasks.get(i)));
+			CreateResourceOperation operation = new CreateResourceOperation
+					(path);
+			creatingTasks.add(operation);
+			creatingResults.add(service.submit(operation));
 		}
 		
 		for (int i = 0; i < resourceQuantity; ++i) {
 			try {
 				checkers[i] = creatingResults.get(i).get();
-				totalNumberOfWords += checkers[i].getSize();
 			} catch (Exception e) {
 				stopService();
 				System.out.println(e.getLocalizedMessage());
@@ -97,22 +97,31 @@ public class MultiThreadApplication {
 			}
 		}
 		
-		System.out.println("Total number of words is " + totalNumberOfWords);
-		
-		return new WordsStore(totalNumberOfWords);
+		return checkers;
 	}
 	
-	private boolean checkStore(WordsStore store) {
+	private boolean putToStore(ResourceContent[] resources) {
 		boolean operationSuccess = true;
 		final ArrayList<Future<Boolean>> checkingResults;
 		final CheckResourceOperation[] checkerTasks;
-		
+		final WordsStore store;
+		int totalNumberOfWords=0;
+				
 		checkingResults = new ArrayList<>(resourceQuantity);
 		checkerTasks = new CheckResourceOperation[resourceQuantity];
 		
 		for (int i = 0; i < resourceQuantity; ++i) {
-			checkerTasks[i] = new CheckResourceOperation(checkers[i], store);
-			checkingResults.add(i, service.submit(checkerTasks[i]));
+			totalNumberOfWords = resources[i].getSize();
+		}
+		System.out.println("Total number of words is " + totalNumberOfWords);
+		
+		store = new WordsStore(totalNumberOfWords);
+		
+		for (int i = 0; i < resourceQuantity; ++i) {
+			CheckResourceOperation task= new CheckResourceOperation
+					(resources[i], store);
+			checkerTasks[i] = task;
+			checkingResults.add(i, service.submit(task));
 		}
 		
 		for (int i = 0; i < resourceQuantity; ++i) {
