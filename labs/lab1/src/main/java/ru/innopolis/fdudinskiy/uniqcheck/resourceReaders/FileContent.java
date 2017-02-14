@@ -45,10 +45,11 @@ public class FileContent extends ResourceContent {
 			throw new WrongResourceException("Файл " + filePath
 					+ " слишком велик!", ex);
 		}
-		
-		try (BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-						new FileInputStream(resource), DEFAULT_ENCODING))) {
+
+		try (
+				FileInputStream fis = new FileInputStream(resource);
+				InputStreamReader isr = new InputStreamReader(fis,  DEFAULT_ENCODING);
+				BufferedReader in = new BufferedReader(isr)) {
 			this.read(in);
 			in.close();
 		}

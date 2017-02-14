@@ -27,8 +27,8 @@ public abstract class ResourceContent {
 	
 	protected void prepareStore(long dataSize) throws ResourceTooLargeException {
 		final int MAX_WORD_TO_SIZE_RATIO = 2;
-		if ((dataSize / MAX_WORD_TO_SIZE_RATIO) > Integer.MAX_VALUE) {
-			throw new ResourceTooLargeException("Ресурс  слишком велик!");
+			if ((dataSize / MAX_WORD_TO_SIZE_RATIO)+1 > Integer.MAX_VALUE) {
+			throw new ResourceTooLargeException("Ресурс слишком велик!");
 		}
 		this.wordArray = new ArrayList<String>(
 				(int) (dataSize / MAX_WORD_TO_SIZE_RATIO));
@@ -89,7 +89,7 @@ public abstract class ResourceContent {
 	}
 	
 	private boolean isStringContainsAcceptableSymbolsOnly(String wordForCheck) {
-		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d\\,\\.\\-\\-\\?\\—\\–!№%\":*();" +
+		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9«»\\s\\d\\,\\.\\-\\-\\?\\—\\–!№%\":*();" +
 				"\\[\\]]*";
 		logger.trace("Обработка строки " + wordForCheck);
 		return wordForCheck.matches(ALLOWED_SYMBOLS);
