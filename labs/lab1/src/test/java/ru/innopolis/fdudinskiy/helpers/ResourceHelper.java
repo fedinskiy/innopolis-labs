@@ -9,8 +9,8 @@ public class ResourceHelper {
 	private final String VALID_TEXT_FN="unrepetable";
 	private final String VALID2_TEXT_FN="заяц";
 	private final String HTTP_PREFIX="https://raw.githubusercontent"
-			+".com/jaowl/innopolis-labs/master/lab1/src/main/resources/";
-	private final String PATH_PREFIX="src/main/resources/";
+			+".com/jaowl/innopolis-labs/master/labs/lab1/src/main/resources/texts/";
+	private final String PATH_PREFIX="src/main/resources/texts/";
 	
 	public String getResource(ResourceType type, FileType fileType){
 		String prefix=null;

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 /**
  * Created by fedinskiy on 06.02.17.
  */
+
 public abstract class ResourceContent {
 	protected static Logger logger = LogManager.getLogger(ResourceContent.class);
 	private String resourceName;
@@ -50,7 +51,6 @@ public abstract class ResourceContent {
 				line = in.readLine();
 				continue;
 			}
-			Integer i = new Integer("1");
 			if (!isStringContainsAcceptableSymbolsOnly(line)) {
 				throw new IllegalSymbolsException(line, resourceName);
 			}
@@ -89,7 +89,7 @@ public abstract class ResourceContent {
 	}
 	
 	private boolean isStringContainsAcceptableSymbolsOnly(String wordForCheck) {
-		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d,.\\--—?!№%\":*();" +
+		final String ALLOWED_SYMBOLS = "[А-Яа-яЁё0-9\\s\\d\\,\\.\\-\\-\\?\\—\\–!№%\":*();" +
 				"\\[\\]]*";
 		logger.trace("Обработка строки " + wordForCheck);
 		return wordForCheck.matches(ALLOWED_SYMBOLS);

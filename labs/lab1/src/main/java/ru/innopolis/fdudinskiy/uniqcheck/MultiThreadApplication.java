@@ -39,24 +39,27 @@ public class MultiThreadApplication {
 		stopService();
 	}
 	
-	public static void main(String[] args) {
+	public static boolean main(String[] args) {
 		
 		MultiThreadApplication app;
 		ResourceContent[] resources;
+		boolean isSucessfullyWorked=false;
 		
 		app = new MultiThreadApplication(args.length);
 		resources = app.getResourceContent(args);
 		if (null == resources || resources.length == 0) {
 			app.stopService();
-			return;
+			return false;
 		}
 		
 		if (app.putToStore(resources)) {
+			isSucessfullyWorked=true;
 			logger.info("Добавление слов прошло успешно, ресурсы " +
 					"содержат только уникальные слова");
 		}
 		
 		app.stopService();
+		return isSucessfullyWorked;
 	}
 	
 	private void stopService() {

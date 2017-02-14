@@ -16,8 +16,7 @@ import static ru.innopolis.fdudinskiy.helpers.ResourceHelper.ResourceType.FILE;
 /**
  * Created by fedinskiy on 13.02.17.
  */
-class ResourceContentTest extends TestBase{
-	
+class ResourceContentPublicTest extends TestBase{
 	
 	@Test
 	void addNewWordsToStore() throws WrongResourceException, IllegalSymbolsException, IOException, WordAlreаdyAddedException {
@@ -31,6 +30,7 @@ class ResourceContentTest extends TestBase{
 	}
 	
 	@Test
+	
 	private ResourceContent getResourceContentValid() throws WrongResourceException, IOException, IllegalSymbolsException {
 		return ResourceContentFactory.createChecker(resources()
 					.getResource(FILE,
