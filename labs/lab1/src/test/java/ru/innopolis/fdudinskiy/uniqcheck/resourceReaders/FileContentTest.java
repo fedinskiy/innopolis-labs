@@ -1,35 +1,28 @@
 package ru.innopolis.fdudinskiy.uniqcheck.resourceReaders;
 
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
+import ru.innopolis.fdudinskiy.helpers.TestBase;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.IllegalSymbolsException;
 import ru.innopolis.fdudinskiy.uniqcheck.exceptions.WrongResourceException;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.runner.RunWith;
-import static org.mockito.ArgumentMatchers.longThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static ru.innopolis.fdudinskiy.helpers.ResourceHelper.FileType.VALID;
+import static ru.innopolis.fdudinskiy.helpers.ResourceHelper.ResourceType.FILE;
 
 /**
  * Created by fedinskiy on 14.02.17.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(FileInputStream.class)
-class FileContentTest {
+
+class FileContentTest extends TestBase{
 	File mockFile;
 	 
 	@BeforeEach
@@ -44,30 +37,19 @@ class FileContentTest {
 		when(mockFile.length()).thenReturn((long) 10);
 	 }
 	 
-	 @Test
-	void createFileResource() throws Exception {
-		 final String DEFAULT_ENCODING = "UTF-8";
-		//BufferedReader(new InputStreamReader( new FileInputStream
-		 FileInputStream mockFileStream=mock(FileInputStream.class);
-		 InputStreamReader mockReader=mock(InputStreamReader.class);
-		 BufferedReader mockBuffered=mock(BufferedReader.class);
-		 when(mockBuffered.readLine()).thenReturn("строка").thenReturn("строка вторая").thenReturn(null);
-		
-		
-		 PowerMockito.whenNew(FileInputStream.class).withArguments(mockFile).thenReturn(mockFileStream);
-		 PowerMockito.whenNew(InputStreamReader.class).withArguments(mockFileStream,DEFAULT_ENCODING).thenReturn(mockReader);
-		 PowerMockito.whenNew(BufferedReader.class).withArguments(mockReader).thenReturn(mockBuffered);
-		 assertNotNull(Whitebox.invokeConstructor(FileContent.class,mockFile));
-	}
+		 @Test
+		void createFileResource() throws Exception {
+			assertNotNull(new FileContent(new File(resources().getResource(FILE, VALID))));
+		}
 	
-
+	
+	@Disabled
+	@Test
 	/**
 	 * Тест, проверяющий правильную обработку файлов большого размера.
 	 * Вызывает у меня ошибку превышения доступной памяти, поэтому Disabled до тех пор,
 	 * пока его не смогут прогнать на машине с 8+ гигами оперативы
 	 */
-	@Disabled
-	@Test
 	void createFileResourceLargeFile() throws WrongResourceException, IllegalSymbolsException, IOException {
 		long bigButOkay= (((long)Integer.MAX_VALUE)*2)-1;
 		when(mockFile.length()).thenReturn(bigButOkay);
