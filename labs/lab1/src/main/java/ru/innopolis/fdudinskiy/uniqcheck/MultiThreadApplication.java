@@ -2,6 +2,7 @@ package ru.innopolis.fdudinskiy.uniqcheck;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.innopolis.fdudinskiy.uniqcheck.resourceReaders.FileContent;
 import ru.innopolis.fdudinskiy.uniqcheck.resourceReaders.ResourceContent;
 import ru.innopolis.fdudinskiy.uniqcheck.store.WordsStore;
 import ru.innopolis.fdudinskiy.uniqcheck.threads.CheckResourceOperation;
@@ -17,18 +18,16 @@ import java.util.concurrent.Future;
 /**
  * Created by fedinskiy on 08.02.17.
  */
-public class MultiThreadApplication {
+public class MultiThreadApplication extends FileContent {
 	private final static Logger logger = LogManager.getLogger
 			(MultiThreadApplication.class);
 	private final ExecutorService service;
 	private final int resourceQuantity;
-	//private ResourceContent[] checkers;
 	
 	/**
 	 * @param resourceQuantity — число ресурсов
 	 */
 	public MultiThreadApplication(int resourceQuantity) {
-		
 		this.resourceQuantity = resourceQuantity;
 		service = Executors.newFixedThreadPool(resourceQuantity);
 	}
@@ -39,8 +38,10 @@ public class MultiThreadApplication {
 		stopService();
 	}
 	
-	public static boolean main(String[] args) {
-		
+	public static void main(String[] args) {
+		runApp(args);
+	}
+	public static boolean runApp(String[] args) {
 		MultiThreadApplication app;
 		ResourceContent[] resources;
 		boolean isSucessfullyWorked=false;
@@ -140,7 +141,6 @@ public class MultiThreadApplication {
 				logger.warn(e.getMessage());
 			}
 		}
-		
 		return operationSuccess;
 	}
 }

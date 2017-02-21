@@ -34,33 +34,41 @@ public abstract class ResourceContent {
 				(int) (dataSize / MAX_WORD_TO_SIZE_RATIO));
 	}
 	
-	protected void read(BufferedReader in)
-			throws IOException, IllegalSymbolsException {
+	public synchronized void addLine(String line) throws IllegalSymbolsException {
+		addLineToArray(line);
+	}
+	
+	private void addLineToArray(String line) throws IllegalSymbolsException {
 		final String SPACES = "[\\s]";
-		String line;
-		String[] lineContent;
 		String word;
 		
+		String[] lineContent;
+		if (line.isEmpty()) {
+			return;
+		}
+		Integer i = new Integer("1");
+		if (!isStringContainsAcceptableSymbolsOnly(line)) {
+			throw new IllegalSymbolsException(line, resourceName);
+		}
+		lineContent = line.split(SPACES);
+		for (String stringPiece : lineContent) {
+			word = cleanWord(stringPiece);
+			if (!word.isEmpty()) {
+				wordArray.add(word);
+			}
+		}
+	}
+	
+	protected void read(BufferedReader in)
+			throws IOException, IllegalSymbolsException {
+		String line;
 		if (null == wordArray) {
 			wordArray = new ArrayList<>();
 		}
 		
 		line = in.readLine();
 		while (null != line) {
-			if (line.isEmpty()) {
-				line = in.readLine();
-				continue;
-			}
-			if (!isStringContainsAcceptableSymbolsOnly(line)) {
-				throw new IllegalSymbolsException(line, resourceName);
-			}
-			lineContent = line.split(SPACES);
-			for (String stringPiece : lineContent) {
-				word = cleanWord(stringPiece);
-				if (!word.isEmpty()) {
-					wordArray.add(word);
-				}
-			}
+			addLineToArray(line);
 			line = in.readLine();
 		}
 		wordArray.trimToSize();

@@ -17,6 +17,6 @@ class MultiThreadApplicationTest extends TestBase {
 		final String[] resources = new String[2];
 		resources[0] = resources().getResource(FILE, VALID);
 		resources[1] = resources().getResource(FILE, VALID2);
-		assertTrue(MultiThreadApplication.main(resources));
+		assertTrue(MultiThreadApplication.runApp(resources));
 	}
 }
