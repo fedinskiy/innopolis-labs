@@ -20,6 +20,13 @@ public class SimpleSQLHelper extends SQLHelper{
 			logger.error(e.getMessage(), e);
 		}
 	}
+	@Override
+	protected ResultSet getAllFromTable(String table) throws SQLException {
+		String sqlQ ="SELECT * FROM "+table;
+		final ResultSet resultSet = conn.createStatement().executeQuery(sqlQ);
+		return resultSet;
+	}
+	
 	public synchronized SendedEmail sendedEmail() throws SQLException {
 		SendedEmail result;
 		String sqlQ ="SELECT email.id AS email_id, email.sended_at, email.content, " +

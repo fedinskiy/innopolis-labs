@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:email xmlns="http://DBClasses/EmailTypes" xmlns:ns2="http://DBClasses/CommonTypes">
-    <sended_at>2016-05-27T08:43:00.000+04:00</sended_at>
-    <addressee></addressee>
+    <sended_at>2016-05-27T00:00:00.000+03:00</sended_at>
     <subject>Innopolis Message</subject>
     <content>
         <ns2:textContent>We want you!</ns2:textContent>

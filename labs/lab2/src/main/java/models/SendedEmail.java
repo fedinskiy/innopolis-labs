@@ -21,18 +21,12 @@ public class SendedEmail extends Email{
 	
 	public SendedEmail(xmlclasses.Email email) {
 		super(email);
-		this.setAddresee(email.getAddressee().getEmail());
 		this.date=email.getSendedAt().toGregorianCalendar().toZonedDateTime().toLocalDate();
 	}
 	
 	public SendedEmail(databaseclasses.SendedEmail email){
 		super(email.getSubject(),email.getContent(),null);
 		this.date=email.getSended_at();
-	}
-	
-	
-	public LocalDate getDate() {
-		return date;
 	}
 	
 	public xmlclasses.Email toXML() throws DatatypeConfigurationException {
@@ -45,25 +39,21 @@ public class SendedEmail extends Email{
 		retval.setSubject(this.getSubject());
 		
 		retval.setId(null);
-		retval.setAddressee(null);
+		retval.setAddresseeId(null);
 		retval.setReasonId(null);
 		retval.setSenderId(null);
 		return retval;
 	}
+	public LocalDate getDate() {
+		return date;
+	}
+	
 	public databaseclasses.SendedEmail toSQL() throws SQLException {
 		databaseclasses.SendedEmail email= new databaseclasses.SendedEmail();
 		email.setContent(getContent());
 		email.setSended_at(this.getDate());
 		email.setSubject(getSubject());
 		return email;
-	}
-	private static XMLGregorianCalendar XMLDate(LocalDate date) throws DatatypeConfigurationException {
-		XMLGregorianCalendar xcal;
-				
-		GregorianCalendar gcal = GregorianCalendar.from(date.atStartOfDay(ZoneId.systemDefault()));
-		xcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcal);
-		
-		return xcal;
 	}
 	
 }

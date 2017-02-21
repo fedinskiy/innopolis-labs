@@ -14,44 +14,38 @@ import java.util.Date;
 
 @Entity
 @javax.persistence.Table(name = "email")
-public class SendedEmail {
-	private String subject;
-	private String content;
-	private LocalDate sended_at;
-	
-	@ManyToOne( cascade = CascadeType.ALL, fetch=FetchType.EAGER, targetEntity=Enrollee.class )
-	@JoinColumn(name = "user_id")
-	private Enrollee addressee;
+public class SendedEmail extends DBClass{
 	
 	@Id
 	private Long id;
+	private Long user_id;
+	private Long superuser_id;
+	private Long template_id;
+	private LocalDate sended_at;
+	private String content;
+	private String subject;
+
 	
 	public SendedEmail() {
 	}
 	
 	public SendedEmail(ResultSet resultSet) throws SQLException {
-		if(resultSet.next()){
+			id=resultSet.getLong("id");
+			user_id=resultSet.getLong("user_id");
+			superuser_id=resultSet.getLong("superuser_id");
+			template_id=resultSet.getLong("email_reason_id");
+		sended_at=resultSet.getDate("sended_at").toLocalDate();
 			subject=resultSet.getString("subject");
 			content=resultSet.getString("content");
-			sended_at=resultSet.getDate("sended_at").toLocalDate();
-			id=resultSet.getLong("email_id");
-			this.addressee=new Enrollee(resultSet);
-		}
 	}
 	
 	public PreparedStatement toStatement(PreparedStatement statement) throws SQLException {
-		final long MOCK_ID=1;
-		if(null!=addressee) {
-			statement.setLong(1, addressee.getId());
-		}else{
-			statement.setLong(1, MOCK_ID);
-		}
-		statement.setLong(2, MOCK_ID);
-		statement.setLong(3, MOCK_ID);
+		statement.setLong(1, user_id);
+		statement.setLong(2, superuser_id);
+		statement.setLong(3, template_id);
 		statement.setDate(4, java.sql.Date.valueOf(sended_at));
 		statement.setString(5, content);
 		statement.setString(6, subject);
-	
 		
 		return statement;
 	}
@@ -79,12 +73,5 @@ public class SendedEmail {
 	public LocalDate getSended_at() {
 		return sended_at;
 	}
-	
-	public Enrollee getAddressee() {
-		return addressee;
-	}
-	public String getEmail(){
-		return addressee.getEmail();
-	}
-	
+		
 }

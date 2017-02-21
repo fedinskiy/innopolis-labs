@@ -10,10 +10,10 @@
     <xs:complexType name="emailTemplate">
         <xs:sequence>
             <xs:element name="id" type="xs:integer" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="subject" type="xs:string" minOccurs="1" maxOccurs="1"/>
             <xs:element name="reason" type="xs:string" minOccurs="1" maxOccurs="1"/>
             <xs:element name="contentTemplate" type="cns:emailContent" minOccurs="1" maxOccurs="1"/>
-        </xs:sequence>
+            <xs:element name="subject" type="xs:string" minOccurs="1" maxOccurs="1"/>
+           </xs:sequence>
     </xs:complexType>
 </xs:schema>
 

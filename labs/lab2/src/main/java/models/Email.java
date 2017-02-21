@@ -3,13 +3,14 @@ package models;
 /**
  * Created by fedinskiy on 20.02.17.
  */
-public class Email {
+public abstract class Email extends BaseModel{
 
 	private String subject;
 	private String content;
 	private String addresee;
 	
 	public Email(String subject, String content, String addresee) {
+		super(null);
 		this.subject = subject;
 		this.content = content;
 		this.addresee = addresee;

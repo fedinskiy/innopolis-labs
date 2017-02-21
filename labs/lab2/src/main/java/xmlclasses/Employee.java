@@ -12,29 +12,24 @@ import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 
 /**
- * <p>Java class for bitrix_person complex type.
+ * <p>Java class for employee complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="bitrix_person">
+ * &lt;complexType name="employee">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}integer"/>
- *         &lt;element name="bitrix_id" type="{http://www.w3.org/2001/XMLSchema}integer"/>
  *         &lt;element name="firstname" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="middlename" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="lastname" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="email" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="phone" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="birthdate" type="{http://www.w3.org/2001/XMLSchema}date"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -44,22 +39,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "bitrix_person", propOrder = {
+@XmlType(name = "employee", propOrder = {
     "id",
-    "bitrixId",
     "firstname",
     "middlename",
     "lastname",
-    "email",
-    "phone",
-    "birthdate"
+    "email"
 })
-public class BitrixPerson {
+public class Employee {
 
     @XmlElement(required = true)
     protected BigInteger id;
-    @XmlElement(name = "bitrix_id", required = true)
-    protected BigInteger bitrixId;
     @XmlElement(required = true)
     protected String firstname;
     protected String middlename;
@@ -67,11 +57,6 @@ public class BitrixPerson {
     protected String lastname;
     @XmlElement(required = true)
     protected String email;
-    @XmlElement(required = true)
-    protected String phone;
-    @XmlElement(required = true)
-    @XmlSchemaType(name = "date")
-    protected XMLGregorianCalendar birthdate;
 
     /**
      * Gets the value of the id property.
@@ -95,30 +80,6 @@ public class BitrixPerson {
      */
     public void setId(BigInteger value) {
         this.id = value;
-    }
-
-    /**
-     * Gets the value of the bitrixId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigInteger }
-     *     
-     */
-    public BigInteger getBitrixId() {
-        return bitrixId;
-    }
-
-    /**
-     * Sets the value of the bitrixId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigInteger }
-     *     
-     */
-    public void setBitrixId(BigInteger value) {
-        this.bitrixId = value;
     }
 
     /**
@@ -215,54 +176,6 @@ public class BitrixPerson {
      */
     public void setEmail(String value) {
         this.email = value;
-    }
-
-    /**
-     * Gets the value of the phone property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPhone() {
-        return phone;
-    }
-
-    /**
-     * Sets the value of the phone property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPhone(String value) {
-        this.phone = value;
-    }
-
-    /**
-     * Gets the value of the birthdate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getBirthdate() {
-        return birthdate;
-    }
-
-    /**
-     * Sets the value of the birthdate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setBirthdate(XMLGregorianCalendar value) {
-        this.birthdate = value;
     }
 
 }

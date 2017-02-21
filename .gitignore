@@ -18,7 +18,7 @@ gradle-app.setting
 #binaties & working diretories
 *.class
 target/
-
+results/
 
 # settings without password
 hibernate.cfg.xml

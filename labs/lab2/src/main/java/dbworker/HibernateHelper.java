@@ -8,6 +8,8 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Created by fedinskiy on 21.02.17.
@@ -39,6 +41,11 @@ public class HibernateHelper extends SQLHelper {
 			getSession().beginTransaction();
 			getSession().save(newEmail);
 			getSession().getTransaction().commit();
+	}
+	
+	@Override
+	protected ResultSet getAllFromTable(String email) throws SQLException {
+		return null;
 	}
 	
 	private Session getSession() {
