@@ -15,7 +15,11 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-
+#binaties & working diretories
 *.class
+target/
+
+
+# settings without password
 hibernate.cfg.xml
 !template.hibernate.cfg.xml

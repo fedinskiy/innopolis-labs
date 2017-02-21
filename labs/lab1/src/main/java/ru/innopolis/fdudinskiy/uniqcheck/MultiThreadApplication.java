@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 /**
  * Created by fedinskiy on 08.02.17.
  */
-public class MultiThreadApplication extends FileContent {
+public class MultiThreadApplication {
 	private final static Logger logger = LogManager.getLogger
 			(MultiThreadApplication.class);
 	private final ExecutorService service;

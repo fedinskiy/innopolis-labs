@@ -12,9 +12,10 @@ import java.io.File;
 /**
  * Created by fedinskiy on 21.02.17.
  */
-public class HibernateHelper {
+public class HibernateHelper extends SQLHelper {
 	private final SessionFactory sessionFactory;
-	
+	private Session session;
+		
 	HibernateHelper() {
 		File hibernateConfiguration = new File("lab2/src/main/resources/config/hibernate.cfg.xml");
 		// A SessionFactory is set up once for an application!
@@ -22,14 +23,38 @@ public class HibernateHelper {
 				.configure(hibernateConfiguration) // configures settings from hibernate.cfg.xml
 				.build();
 		sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+		session = sessionFactory.openSession();
 	}
-	public synchronized SendedEmail sendedEmail(){
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		SendedEmail result = (SendedEmail) session.createQuery("from GroupDataDB").list().iterator().next();
-		session.getTransaction().commit();
-		session.close();
+	
+	public synchronized SendedEmail sendedEmail() {
+		SendedEmail result;
+		
+		getSession().beginTransaction();
+		result = (SendedEmail) getSession().createQuery("from SendedEmail").list().iterator().next();
+		getSession().getTransaction().commit();
 		return result;
 	}
 	
+	public synchronized void toSendEmail(SendedEmail newEmail) {
+			getSession().beginTransaction();
+			getSession().save(newEmail);
+			getSession().getTransaction().commit();
+	}
+	
+	private Session getSession() {
+		if (null==session||!session.isOpen()){
+			session=sessionFactory.openSession();
+		}
+		return session;
+	}
+	
+	public void stopSession(){
+		session.close();
+		session=null;
+	}
+	@Override
+	protected void finalize() throws Throwable {
+		stopSession();
+		sessionFactory.close();
+	}
 }

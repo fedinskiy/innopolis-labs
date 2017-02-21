@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns2:email xmlns="http://DBClasses/EmailTypes" xmlns:ns2="http://DBClasses/CommonTypes">
+    <sended_at>2005-02-27T00:00:00.000+03:00</sended_at>
+    <subject>Description number 2662065</subject>
+    <content>
+        <ns2:textContent>Description number 2178374</ns2:textContent>
+    </content>
+</ns2:email>
