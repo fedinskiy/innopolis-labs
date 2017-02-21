@@ -4,15 +4,20 @@ package models;
  * Created by fedinskiy on 20.02.17.
  */
 public class Email {
+
 	private String subject;
 	private String content;
 	private String addresee;
 	
+	public Email(String subject, String content, String addresee) {
+		this.subject = subject;
+		this.content = content;
+		this.addresee = addresee;
+	}
+	
 	
 	public Email(xmlclasses.Email email) {
-		this.subject = email.getSubject();
-		this.content = email.getContent().getTextContent();
-		addresee=null; //может быть пустым для шаблонов
+		this(email.getSubject(), email.getContent().getTextContent(),null);
 	}
 	
 	public String getSubject() {

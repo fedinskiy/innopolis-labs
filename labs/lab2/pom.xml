@@ -45,5 +45,10 @@
             <artifactId>hibernate-ehcache</artifactId>
             <version>5.2.8.Final</version>
         </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.0.0.jre7</version>
+        </dependency>
     </dependencies>
 </project>
