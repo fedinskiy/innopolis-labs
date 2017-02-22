@@ -1,6 +1,5 @@
 package models;
 
-import databaseclasses.DBClass;
 import xmlclasses.BitrixPerson;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -12,9 +11,9 @@ import java.time.LocalDate;
  * Created by fedinskiy on 22.02.17.
  */
 public class User extends BaseModel {
-
+	
 	protected long id;
-	protected  long bitrixId;
+	protected long bitrixId;
 	protected String firstname;
 	protected String middlename;
 	protected String lastname;
@@ -31,7 +30,7 @@ public class User extends BaseModel {
 		lastname = xmlobject.getLastname();
 		email = xmlobject.getEmail();
 		phone = xmlobject.getPhone();
-		birthdate =fromXMLDate(xmlobject.getBirthdate());
+		birthdate = fromXMLDate(xmlobject.getBirthdate());
 	}
 	
 	public User(databaseclasses.User dbClass) {
@@ -47,8 +46,8 @@ public class User extends BaseModel {
 	
 	@Override
 	public BitrixPerson toXML() throws DatatypeConfigurationException {
-		BitrixPerson retval=new BitrixPerson();
-				
+		BitrixPerson retval = new BitrixPerson();
+		
 		retval.setBirthdate(XMLDate(getBirthdate()));
 		retval.setId(null);
 		retval.setBitrixId(BigInteger.valueOf(getBitrixId()));
@@ -62,7 +61,7 @@ public class User extends BaseModel {
 	
 	@Override
 	public databaseclasses.User toSQL() throws SQLException, IllegalAccessException {
-		databaseclasses.User user= new databaseclasses.User();
+		databaseclasses.User user = new databaseclasses.User();
 		user.setBirthdate(getBirthdate());
 		user.setBitrixId(getBitrixId());
 		user.setEmail(getEmail());

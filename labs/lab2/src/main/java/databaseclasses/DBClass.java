@@ -1,8 +1,5 @@
 package databaseclasses;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,5 +14,11 @@ public abstract class DBClass {
 	public DBClass(ResultSet resultSet) throws SQLException, IllegalAccessException {
 	}
 	
+	/**
+	 * @implSpec  Записывает информацию о себе в SQL-запрос
+	 * @param statement
+	 * @return
+	 * @throws SQLException
+	 */
 	public abstract PreparedStatement toStatement(PreparedStatement statement) throws SQLException;
 }

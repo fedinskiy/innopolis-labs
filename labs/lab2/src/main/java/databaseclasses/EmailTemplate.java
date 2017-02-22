@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * Created by fedinskiy on 21.02.17.
  */
-public class EmailTemplate extends DBClass{
+public class EmailTemplate extends DBClass {
 	private Long id;
 	private String name;
 	private String content;
@@ -19,12 +19,10 @@ public class EmailTemplate extends DBClass{
 	
 	public EmailTemplate(ResultSet resultSet) throws SQLException, IllegalAccessException {
 		super(resultSet);
-		if(resultSet.next()){
-			id=resultSet.getLong("id");
-			name=resultSet.getString("name");
-			subject=resultSet.getString("subject");
-			content=resultSet.getString("template");
-		}
+		id = resultSet.getLong("id");
+		name = resultSet.getString("name");
+		subject = resultSet.getString("subject");
+		content = resultSet.getString("template");
 	}
 	
 	@Override
@@ -40,20 +38,20 @@ public class EmailTemplate extends DBClass{
 		return name;
 	}
 	
-	public String getContent() {
-		return content;
-	}
-	
-	public String getSubject() {
-		return subject;
-	}
-	
 	public void setName(String name) {
 		this.name = name;
 	}
 	
+	public String getContent() {
+		return content;
+	}
+	
 	public void setContent(String content) {
 		this.content = content;
+	}
+	
+	public String getSubject() {
+		return subject;
 	}
 	
 	public void setSubject(String subject) {

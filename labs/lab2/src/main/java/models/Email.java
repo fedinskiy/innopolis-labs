@@ -3,8 +3,8 @@ package models;
 /**
  * Created by fedinskiy on 20.02.17.
  */
-public abstract class Email extends BaseModel{
-
+public abstract class Email extends BaseModel {
+	
 	private String subject;
 	private String content;
 	private String addresee;
@@ -18,7 +18,7 @@ public abstract class Email extends BaseModel{
 	
 	
 	public Email(xmlclasses.Email email) {
-		this(email.getSubject(), email.getContent().getTextContent(),null);
+		this(email.getSubject(), email.getContent().getTextContent(), null);
 	}
 	
 	public String getSubject() {

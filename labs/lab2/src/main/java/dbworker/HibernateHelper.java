@@ -1,6 +1,6 @@
 package dbworker;
 
-import databaseclasses.SendedEmail;
+import databaseclasses.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
@@ -17,7 +17,7 @@ import java.sql.SQLException;
 public class HibernateHelper extends SQLHelper {
 	private final SessionFactory sessionFactory;
 	private Session session;
-		
+	
 	HibernateHelper() {
 		File hibernateConfiguration = new File("lab2/src/main/resources/config/hibernate.cfg.xml");
 		// A SessionFactory is set up once for an application!
@@ -37,10 +37,10 @@ public class HibernateHelper extends SQLHelper {
 		return result;
 	}
 	
-	public synchronized void toSendEmail(SendedEmail newEmail) {
-			getSession().beginTransaction();
-			getSession().save(newEmail);
-			getSession().getTransaction().commit();
+	public synchronized void toSQL(SendedEmail newEmail) {
+		getSession().beginTransaction();
+		getSession().save(newEmail);
+		getSession().getTransaction().commit();
 	}
 	
 	@Override
@@ -49,16 +49,43 @@ public class HibernateHelper extends SQLHelper {
 	}
 	
 	private Session getSession() {
-		if (null==session||!session.isOpen()){
-			session=sessionFactory.openSession();
+		if (null == session || !session.isOpen()) {
+			session = sessionFactory.openSession();
 		}
 		return session;
 	}
 	
-	public void stopSession(){
+	public void stopSession() {
 		session.close();
-		session=null;
+		session = null;
 	}
+	
+	@Override
+	public void toSQL(DBClass toSQL, String sqlQ) throws SQLException {
+		
+	}
+	
+	@Override
+	public String getQueue(User toSQl) {
+		return null;
+	}
+	
+	@Override
+	public String getQueue(EmailTemplate toSQl) {
+		return null;
+	}
+	
+	@Override
+	public String getQueue(Administrator toSQl) {
+		return null;
+	}
+	
+	@Override
+	public String getQueue(SendedEmail toSQl) {
+		return null;
+	}
+	
+	
 	@Override
 	protected void finalize() throws Throwable {
 		stopSession();

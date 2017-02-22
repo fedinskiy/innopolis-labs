@@ -9,30 +9,34 @@ import java.sql.SQLException;
  */
 public class EmailTemplate extends Email {
 	private String name;
+	
 	public EmailTemplate(xmlclasses.EmailTemplate email) {
-		super(email.getSubject(),email.getContentTemplate().getTextContent(),null);
+		super(email.getSubject(), email.getContentTemplate().getTextContent(), null);
+		name = email.getReason();
 	}
 	
 	public EmailTemplate(databaseclasses.EmailTemplate template) {
-		super(template.getSubject(),template.getContent(),null);
+		super(template.getSubject(), template.getContent(), null);
+		name = template.getName();
 	}
 	
-	
+	@Override
 	public xmlclasses.EmailTemplate toXML() {
-		xmlclasses.EmailTemplate retval=new xmlclasses.EmailTemplate();
-		EmailContent content=new EmailContent();
+		xmlclasses.EmailTemplate retval = new xmlclasses.EmailTemplate();
+		EmailContent content = new EmailContent();
 		content.setTextContent(this.getContent());
 		retval.setContentTemplate(content);
 		retval.setSubject(this.getSubject());
 		retval.setReason(this.getName());
 		retval.setId(null);
-
+		
 		return retval;
 	}
 	
 	@Override
-	public Object toSQL() throws SQLException, IllegalAccessException {
-		databaseclasses.EmailTemplate template= new databaseclasses.EmailTemplate();
+	public databaseclasses.EmailTemplate toSQL() throws SQLException, IllegalAccessException {
+		databaseclasses.EmailTemplate template = new databaseclasses.EmailTemplate();
+		template.setName(getName());
 		template.setName(getName());
 		template.setContent(getContent());
 		template.setSubject(getSubject());

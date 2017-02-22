@@ -1,8 +1,8 @@
 package databaseclasses;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,10 +14,10 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "email")
-public class User extends DBClass{
+public class User extends DBClass {
 	
 	protected long id;
-
+	
 	protected long bitrixId;
 	protected String firstname;
 	protected String middlename;
@@ -30,20 +30,20 @@ public class User extends DBClass{
 	}
 	
 	public User(ResultSet resultSet) throws SQLException {
-		if(resultSet.next()){
-			id=resultSet.getLong("id");
-			bitrixId=resultSet.getLong("bitrixId");
-			firstname=resultSet.getString("firstname");
-			middlename=resultSet.getString("middlename");
-			lastname=resultSet.getString("lastname");
-			email=resultSet.getString("email");
-			phone=resultSet.getString("phone");
-			birthdate=resultSet.getDate("birthdate").toLocalDate();
-		}
+		id = resultSet.getLong("id");
+		bitrixId = resultSet.getLong("bitrix_id");
+		firstname = resultSet.getString("firstname");
+		middlename = resultSet.getString("middlename");
+		lastname = resultSet.getString("lastname");
+		email = resultSet.getString("email");
+		phone = resultSet.getString("phone");
+		final Date birthdate = resultSet.getDate("birthdate");
+		this.birthdate = (null != birthdate) ? birthdate.toLocalDate() : null;
 	}
 	
+	@Override
 	public PreparedStatement toStatement(PreparedStatement statement) throws SQLException {
-		int order =0;
+		int order = 0;
 		statement.setLong(++order, bitrixId);
 		statement.setString(++order, firstname);
 		statement.setString(++order, middlename);
